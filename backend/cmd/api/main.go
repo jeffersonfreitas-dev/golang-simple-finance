@@ -1,7 +1,12 @@
 package main
 
 import (
+	"context"
+	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/infrastructure/database"
@@ -40,5 +45,36 @@ func main() {
 	router.Use(middleware.CORS())
 
 	routes.SetupRoutes(router, db, jwtService)
+
+	srv := &http.Server{
+		Addr:         ":" + os.Getenv("PORT"),
+		Handler:      router,
+		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 15 * time.Second,
+		IdleTimeout:  60 * time.Second,
+	}
+
+	// Start server in a goroutine
+	go func() {
+		logrus.Printf("Server starting on port %s", os.Getenv("PORT"))
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			logrus.Fatalf("Failed to start server: %v", err)
+		}
+	}()
+
+	// Graceful shutdown
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+	logrus.Println("Shutting down server...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := srv.Shutdown(ctx); err != nil {
+		logrus.Fatal("Server forced to shutdown:", err)
+	}
+
+	logrus.Println("Server exiting")
 
 }

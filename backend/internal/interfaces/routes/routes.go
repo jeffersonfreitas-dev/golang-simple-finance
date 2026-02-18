@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/infrastructure/handlers"
 	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/infrastructure/auth"
 	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/infrastructure/middleware"
 	"gorm.io/gorm"
@@ -18,7 +19,7 @@ func SetupRoutes(router *gin.Engine, db *gorm.DB, jwtService auth.JWTService) {
 	{
 		authHandler := handlers.NewAuthHandler(db, jwtService)
 		public.POST("/auth/register", authHandler.Register)
-		public.POST("/auth/login", authHandler.Login)
+		// public.POST("/auth/login", authHandler.Login)
 	}
 
 	// Protected routes
@@ -29,14 +30,14 @@ func SetupRoutes(router *gin.Engine, db *gorm.DB, jwtService auth.JWTService) {
 
 		// Transactions
 		protected.POST("/transactions", transactionHandler.CreateTransaction)
-		protected.GET("/transactions", transactionHandler.ListTransactions)
-		protected.GET("/transactions/:id", transactionHandler.GetTransaction)
-		protected.PUT("/transactions/:id", transactionHandler.UpdateTransaction)
-		protected.DELETE("/transactions/:id", transactionHandler.DeleteTransaction)
+		// protected.GET("/transactions", transactionHandler.ListTransactions)
+		// protected.GET("/transactions/:id", transactionHandler.GetTransaction)
+		// protected.PUT("/transactions/:id", transactionHandler.UpdateTransaction)
+		// protected.DELETE("/transactions/:id", transactionHandler.DeleteTransaction)
 
 		// Reports
-		protected.GET("/reports/daily-extract", transactionHandler.GetDailyExtract)
-		protected.GET("/reports/summary", transactionHandler.GetSummary)
+		// protected.GET("/reports/daily-extract", transactionHandler.GetDailyExtract)
+		// protected.GET("/reports/summary", transactionHandler.GetSummary)
 	}
 
 	// Admin routes
