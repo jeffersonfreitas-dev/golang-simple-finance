@@ -25,16 +25,6 @@ func NewAuthHandler(db *gorm.DB, jwtService auth.JWTService) *AuthHandler {
 	}
 }
 
-// Register godoc
-// @Summary Register a new user
-// @Tags Auth
-// @Accept json
-// @Produce json
-// @Param request body dto.RegisterRequest true "User registration data"
-// @Success 201 {object} dto.LoginResponse
-// @Failure 400 {object} dto.ErrorResponse
-// @Failure 409 {object} dto.ErrorResponse
-// @Router /auth/register [post]
 func (h *AuthHandler) Register(c *gin.Context) {
 	var req dto.RegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -86,4 +76,49 @@ func (h *AuthHandler) Register(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, response)
 
+}
+
+func (h *AuthHandler) Login(c *gin.Context) {
+	var req dto.LoginRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, dto.ErrorResponse{Error: "invalid request", Message: err.Error()})
+		return
+	}
+
+	user, err := h.userRepo.FindByEmail(req.Email)
+	if err != nil || user == nil {
+		c.JSON(http.StatusUnauthorized, dto.ErrorResponse{Error: "invalid credentials"})
+		return
+	}
+
+	if !user.Active {
+		c.JSON(http.StatusUnauthorized, dto.ErrorResponse{Error: "user is inactive"})
+		return
+	}
+
+	if err := user.ComparePassword(req.Password); err != nil {
+		c.JSON(http.StatusUnauthorized, dto.ErrorResponse{Error: "invalid credentials"})
+		return
+	}
+
+	_ = h.userRepo.UpdateLastLogin(user.ID)
+
+	token, err := h.jwtService.GenerateToken(user.ID, string(user.Role))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: "failed to generate token"})
+		return
+	}
+
+	response := dto.LoginResponse{
+		Token: token,
+		User: dto.UserDTO{
+			ID:        user.ID,
+			Name:      user.Name,
+			Email:     user.Email,
+			Role:      string(user.Role),
+			CreatedAt: user.CreatedAt.Format(time.RFC3339),
+		},
+	}
+
+	c.JSON(http.StatusOK, response)
 }

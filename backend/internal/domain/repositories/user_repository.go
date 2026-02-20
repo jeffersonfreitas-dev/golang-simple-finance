@@ -3,6 +3,7 @@ package repositories
 import (
 	"errors"
 
+	"github.com/google/uuid"
 	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/domain/entities"
 	"gorm.io/gorm"
 )
@@ -10,6 +11,7 @@ import (
 type UserRepository interface {
 	Create(user *entities.User) error
 	FindByEmail(email string) (*entities.User, error)
+	UpdateLastLogin(id uuid.UUID) error
 }
 
 type userRepository struct {
@@ -31,4 +33,9 @@ func (r *userRepository) FindByEmail(email string) (*entities.User, error) {
 		return nil, nil
 	}
 	return &user, err
+}
+
+func (r *userRepository) UpdateLastLogin(id uuid.UUID) error {
+	return r.db.Model(&entities.User{}).Where("id = ?", id).
+		Update("last_login_at", gorm.Expr("NOW()")).Error
 }

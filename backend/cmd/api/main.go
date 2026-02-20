@@ -54,7 +54,6 @@ func main() {
 		IdleTimeout:  60 * time.Second,
 	}
 
-	// Start server in a goroutine
 	go func() {
 		logrus.Printf("Server starting on port %s", os.Getenv("PORT"))
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
@@ -62,7 +61,6 @@ func main() {
 		}
 	}()
 
-	// Graceful shutdown
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit

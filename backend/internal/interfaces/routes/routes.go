@@ -19,7 +19,7 @@ func SetupRoutes(router *gin.Engine, db *gorm.DB, jwtService auth.JWTService) {
 	{
 		authHandler := handlers.NewAuthHandler(db, jwtService)
 		public.POST("/auth/register", authHandler.Register)
-		// public.POST("/auth/login", authHandler.Login)
+		public.POST("/auth/login", authHandler.Login)
 	}
 
 	// Protected routes
