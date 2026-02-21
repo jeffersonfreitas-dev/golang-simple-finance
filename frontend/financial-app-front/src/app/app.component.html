@@ -1,1 +1,325 @@
-<router-outlet></router-outlet>
+<div class="spa-container">
+  <!-- Header/Navigation -->
+  <header class="header" [class.scrolled]="isScrolled">
+    <div class="header-content">
+      <div class="logo">
+        <span class="logo-icon">💰</span>
+        <h1>FinancialApp</h1>
+      </div>
+      
+      <nav class="nav-menu" [class.mobile-open]="mobileMenuOpen">
+        <a href="#home" (click)="scrollTo('home', $event)">Início</a>
+        <a href="#features" (click)="scrollTo('features', $event)">Recursos</a>
+        <a href="#how-it-works" (click)="scrollTo('how-it-works', $event)">Como Funciona</a>
+        <a href="#pricing" (click)="scrollTo('pricing', $event)">Preços</a>
+        <a href="#testimonials" (click)="scrollTo('testimonials', $event)">Depoimentos</a>
+        <a href="#contact" (click)="scrollTo('contact', $event)">Contato</a>
+      </nav>
+
+      <div class="auth-buttons">
+        <button class="btn-login" routerLink="/login">Entrar</button>
+        <button class="btn-register" routerLink="/register">Cadastrar</button>
+        <button class="mobile-toggle" (click)="toggleMobileMenu()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 class="animate-fade-up">
+            Controle suas <span class="gradient-text">finanças</span> de forma simples e inteligente
+          </h1>
+          <p class="animate-fade-up delay-1">
+            Gerencie contas a pagar e receber, acompanhe seu saldo em tempo real e tenha relatórios detalhados para tomar melhores decisões financeiras.
+          </p>
+          
+          <div class="hero-cta animate-fade-up delay-2">
+            <button class="btn-primary" routerLink="/register">
+              Começar Agora
+              <span class="btn-arrow">→</span>
+            </button>
+            <button class="btn-video" (click)="showDemo()">
+              <span class="play-icon">▶</span>
+              Ver Demo
+            </button>
+          </div>
+
+          <div class="hero-stats animate-fade-up delay-3">
+            <div class="stat-item">
+              <span class="stat-number">10k+</span>
+              <span class="stat-label">Usuários ativos</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">R$ 50M+</span>
+              <span class="stat-label">Gerenciados</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">4.9</span>
+              <span class="stat-label">Avaliação ★</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-image animate-float">
+          <div class="dashboard-preview">
+            <div class="preview-card card-1">
+              <div class="card-header">
+                <span>Saldo Atual</span>
+                <span class="amount">R$ 15.430,00</span>
+              </div>
+              <div class="card-chart"></div>
+            </div>
+            <div class="preview-card card-2">
+              <div class="card-row">
+                <span>Receitas</span>
+                <span class="positive">+ R$ 5.200</span>
+              </div>
+              <div class="card-row">
+                <span>Despesas</span>
+                <span class="negative">- R$ 3.800</span>
+              </div>
+            </div>
+            <div class="preview-card card-3">
+              <div class="progress-bar">
+                <div class="progress" style="width: 75%"></div>
+              </div>
+              <span>75% das metas</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+      <div class="section-header">
+        <span class="section-badge">RECURSOS</span>
+        <h2>Tudo que você precisa para<br>gerenciar suas finanças</h2>
+        <p>Ferramentas poderosas e fáceis de usar para controle financeiro completo</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card" *ngFor="let feature of features">
+          <div class="feature-icon" [style.background]="feature.color">
+            {{ feature.icon }}
+          </div>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+          <a href="#" class="feature-link">Saiba mais →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="how-it-works">
+      <div class="section-header">
+        <span class="section-badge">COMO FUNCIONA</span>
+        <h2>Comece em poucos minutos</h2>
+        <p>Configure sua conta e comece a gerenciar suas finanças hoje mesmo</p>
+      </div>
+
+      <div class="steps">
+        <div class="step" *ngFor="let step of steps; let i = index">
+          <div class="step-number">{{ i + 1 }}</div>
+          <div class="step-icon">{{ step.icon }}</div>
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.description }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="pricing">
+      <div class="section-header">
+        <span class="section-badge">PREÇOS</span>
+        <h2>Planos para todos os perfis</h2>
+        <p>Escolha o plano ideal para suas necessidades</p>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="pricing-card" *ngFor="let plan of pricingPlans">
+          <div class="pricing-header" [class.popular]="plan.popular">
+            <span class="plan-badge" *ngIf="plan.popular">Mais Popular</span>
+            <h3>{{ plan.name }}</h3>
+            <div class="price">
+              <span class="currency">R$</span>
+              <span class="amount">{{ plan.price }}</span>
+              <span class="period">/mês</span>
+            </div>
+          </div>
+          <div class="pricing-features">
+            <ul>
+              <li *ngFor="let feature of plan.features">
+                <span class="check">✓</span>
+                {{ feature }}
+              </li>
+            </ul>
+          </div>
+          <button class="btn-plan" [class.btn-primary]="plan.popular" [class.btn-secondary]="!plan.popular">
+            Começar Agora
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="testimonials">
+      <div class="section-header">
+        <span class="section-badge">DEPOIMENTOS</span>
+        <h2>O que nossos usuários dizem</h2>
+        <p>Mais de 10 mil pessoas já estão controlando suas finanças com a gente</p>
+      </div>
+
+      <div class="testimonials-slider">
+        <div class="testimonial-card" *ngFor="let testimonial of testimonials">
+          <div class="testimonial-content">
+            <div class="quote">"</div>
+            <p>{{ testimonial.text }}</p>
+          </div>
+          <div class="testimonial-author">
+            <div class="author-avatar">{{ testimonial.avatar }}</div>
+            <div class="author-info">
+              <h4>{{ testimonial.name }}</h4>
+              <span>{{ testimonial.role }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+      <div class="cta-content">
+        <h2>Pronto para começar a controlar suas finanças?</h2>
+        <p>Junte-se a milhares de usuários que já estão organizando sua vida financeira</p>
+        <div class="cta-buttons">
+          <button class="btn-primary btn-large" routerLink="/register">
+            Criar Conta Gratuita
+          </button>
+          <button class="btn-outline btn-large" routerLink="/login">
+            Fazer Login
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact">
+      <div class="contact-content">
+        <div class="contact-info">
+          <h3>Vamos conversar?</h3>
+          <p>Tem dúvidas ou sugestões? Entre em contato conosco</p>
+          
+          <div class="contact-details">
+            <div class="contact-item">
+              <span class="contact-icon">📧</span>
+              <div>
+                <strong>Email</strong>
+                <span>"contatofinancialapp.com"</span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <span class="contact-icon">📱</span>
+              <div>
+                <strong>Telefone</strong>
+                <span>(11) 99999-9999</span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <span class="contact-icon">📍</span>
+              <div>
+                <strong>Endereço</strong>
+                <span>São Paulo, SP</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="social-links">
+            <a href="#" class="social-link">📘</a>
+            <a href="#" class="social-link">📷</a>
+            <a href="#" class="social-link">🐦</a>
+            <a href="#" class="social-link">💼</a>
+          </div>
+        </div>
+
+        <form class="contact-form">
+          <input type="text" placeholder="Seu nome" class="form-input">
+          <input type="email" placeholder="Seu email" class="form-input">
+          <textarea placeholder="Sua mensagem" rows="4" class="form-input"></textarea>
+          <button type="submit" class="btn-primary">Enviar Mensagem</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <div class="logo">
+          <span class="logo-icon">💰</span>
+          <h2>FinancialApp</h2>
+        </div>
+        <p>Gerencie suas finanças de forma inteligente e alcance seus objetivos financeiros.</p>
+      </div>
+
+      <div class="footer-section">
+        <h4>Produto</h4>
+        <ul>
+          <li><a href="#">Recursos</a></li>
+          <li><a href="#">Preços</a></li>
+          <li><a href="#">Segurança</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">Sobre</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Carreiras</a></li>
+          <li><a href="#">Contato</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Termos</a></li>
+          <li><a href="#">Privacidade</a></li>
+          <li><a href="#">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2024 FinancialApp. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Demo Modal -->
+  <div class="modal" [class.show]="showDemoModal" (click)="closeDemo($event)">
+    <div class="modal-content">
+      <button class="modal-close" (click)="showDemoModal = false">×</button>
+      <div class="video-container">
+        <iframe 
+          width="100%" 
+          height="400" 
+          src="https://www.youtube.com/embed/demo" 
+          title="Demo Video"
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+  </div>
+</div>
