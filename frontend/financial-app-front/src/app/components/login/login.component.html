@@ -1,40 +1,41 @@
 <div class="login-container">
   <div class="login-card">
+    <!-- Header -->
     <div class="login-header">
-      <h2>Financial App</h2>
+      <div class="logo">
+        <span class="logo-icon">💰</span>
+        <h1>FinancialApp</h1>
+      </div>
+      <h2>Bem-vindo de volta!</h2>
       <p class="subtitle">Faça login para acessar sua conta</p>
     </div>
 
-    <!-- [class.is-invalid]="email?.invalid && email?.touched" -->
+    <!-- Form -->
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
       <div class="form-group">
-        <label for="email">E-mail</label>
+        <label class="form-label">E-mail</label>
         <div class="input-group">
-          <span class="input-icon">📧</span>
           <input 
             type="email" 
-            id="email" 
+            class="form-input" 
             formControlName="email" 
-            placeholder="seu@email.com"
-            
+            [class.is-invalid]="email.invalid && email.touched"
           >
         </div>
-        <div class="error-message" *ngIf="email?.invalid && email?.touched">
+        <div class="form-error" *ngIf="email.invalid && email.touched">
           <span *ngIf="email?.errors?.['required']">E-mail é obrigatório</span>
           <span *ngIf="email?.errors?.['email']">E-mail inválido</span>
         </div>
       </div>
 
-      <!-- [class.is-invalid]="password?.invalid && password?.touched" -->
       <div class="form-group">
-        <label for="password">Senha</label>
+        <label class="form-label">Senha</label>
         <div class="input-group">
-          <span class="input-icon">🔒</span>
           <input 
             [type]="showPassword ? 'text' : 'password'" 
-            id="password" 
+            class="form-input" 
             formControlName="password" 
-            placeholder="Sua senha"
+            [class.is-invalid]="password.invalid && password.touched"
           >
           <button 
             type="button" 
@@ -44,37 +45,48 @@
             {{ showPassword ? '👁️' : '👁️‍🗨️' }}
           </button>
         </div>
-        <div class="error-message" *ngIf="password?.invalid && password?.touched">
+        <div class="form-error" *ngIf="password.invalid && password.touched">
           <span *ngIf="password?.errors?.['required']">Senha é obrigatória</span>
           <span *ngIf="password?.errors?.['minlength']">Mínimo 6 caracteres</span>
         </div>
       </div>
 
       <div class="form-options">
-        <label class="checkbox-container">
+        <label class="checkbox">
           <input type="checkbox" formControlName="rememberMe">
           <span class="checkmark"></span>
           Lembrar-me
         </label>
-        <a href="#" class="forgot-password">Esqueceu a senha?</a>
       </div>
 
       <button 
         type="submit" 
-        class="btn-login" 
+        class="btn btn-primary btn-block" 
         [disabled]="loginForm.invalid || isLoading"
       >
         <span *ngIf="!isLoading">Entrar</span>
         <div class="spinner" *ngIf="isLoading"></div>
       </button>
 
+      <button 
+        routerLink="/home" 
+        class="btn btn-secondary btn-block" 
+      >
+      <span *ngIf="!isLoading">Voltar</span>
+    </button>
+
+      <div class="alert alert-success" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
       <div class="alert alert-error" *ngIf="errorMessage">
         {{ errorMessage }}
       </div>
     </form>
 
+    <!-- Footer -->
     <div class="login-footer">
-      <p>Não tem uma conta? <a routerLink="/register">Cadastre-se</a></p>
+      <p>Não tem uma conta? <a routerLink="/register" class="register-link">Cadastre-se gratuitamente</a></p>
     </div>
   </div>
 </div>

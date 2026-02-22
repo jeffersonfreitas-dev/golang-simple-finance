@@ -1,0 +1,180 @@
+<div class="register-container">
+  <div class="register-card">
+    <!-- Header -->
+    <div class="register-header">
+      <div class="logo">
+        <span class="logo-icon">💰</span>
+        <h1>FinancialApp</h1>
+      </div>
+      <h2>Crie sua conta</h2>
+      <p class="subtitle">Comece a gerenciar suas finanças hoje mesmo</p>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+      <div class="progress" [style.width.%]="progressWidth"></div>
+      <div class="steps">
+        <span class="step" [class.active]="currentStep >= 1">1</span>
+        <span class="step-line"></span>
+        <span class="step" [class.active]="currentStep >= 2">2</span>
+        <span class="step-line"></span>
+        <span class="step" [class.active]="currentStep >= 3">3</span>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <!-- Step 1: Basic Info -->
+      <div class="step-content" *ngIf="currentStep === 1">
+        <div class="form-group">
+          <label class="form-label">Nome completo</label>
+          <div class="input-group">
+            <input 
+              type="text" 
+              class="form-input" 
+              formControlName="name" 
+              [class.is-invalid]="name.invalid && name.touched"
+            >
+          </div>
+          <div class="form-error" *ngIf="name.invalid && name.touched">
+            <span *ngIf="name?.errors?.['required']">Nome é obrigatório</span>
+            <span *ngIf="name?.errors?.['minlength']">Mínimo 3 caracteres</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">E-mail</label>
+          <div class="input-group">
+            <input 
+              type="email" 
+              class="form-input" 
+              formControlName="email" 
+              [class.is-invalid]="email.invalid && email.touched"
+            >
+          </div>
+          <div class="form-error" *ngIf="email.invalid && email.touched">
+            <span *ngIf="email?.errors?.['required']">E-mail é obrigatório</span>
+            <span *ngIf="email?.errors?.['email']">E-mail inválido</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Password -->
+      <div class="step-content" *ngIf="currentStep === 2">
+        <div class="form-group">
+          <label class="form-label">Senha</label>
+          <div class="input-group">
+            <input 
+              [type]="showPassword ? 'text' : 'password'" 
+              class="form-input" 
+              formControlName="password" 
+              [class.is-invalid]="password.invalid && password.touched"
+            >
+          </div>
+          <div class="form-error" *ngIf="password.invalid && password.touched">
+            <span *ngIf="password?.errors?.['required']">Senha é obrigatória</span>
+            <span *ngIf="password?.errors?.['minlength']">Mínimo 6 caracteres</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Confirmar senha</label>
+          <div class="input-group">
+            <input 
+              [type]="showConfirmPassword ? 'text' : 'password'" 
+              class="form-input" 
+              formControlName="confirmPassword" 
+              [class.is-invalid]="confirmPassword.invalid && confirmPassword.touched"
+            >
+          </div>
+          <div class="form-error" *ngIf="confirmPassword.invalid && confirmPassword.touched">
+            <span *ngIf="confirmPassword?.errors?.['required']">Confirmação é obrigatória</span>
+            <span *ngIf="confirmPassword?.errors?.['passwordMismatch']">As senhas não coincidem</span>
+          </div>
+        </div>
+
+        <!-- Password strength meter -->
+        <div class="password-strength" *ngIf="password?.value">
+          <div class="strength-bar">
+            <div class="strength-fill" [style.width.%]="passwordStrength" [class]="strengthClass"></div>
+          </div>
+          <span class="strength-text">{{ strengthText }}</span>
+        </div>
+      </div>
+
+      <!-- Step 3: Profile Info -->
+      <div class="step-content" *ngIf="currentStep === 3">
+        <div class="form-group">
+          <label class="form-label">Telefone (opcional)</label>
+          <div class="input-group">
+            <input 
+              type="tel" 
+              class="form-input" 
+              formControlName="phone" 
+              placeholder="(85) 99999-9999"
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Como conheceu a FinancialApp?</label>
+          <div class="input-group">
+            <select class="form-input" formControlName="referral">
+              <option value="">Selecione uma opção</option>
+              <option value="google">Google</option>
+              <option value="friend">Amigo/Indicação</option>
+              <option value="social">Redes Sociais</option>
+              <option value="ad">Anúncio</option>
+              <option value="other">Outro</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="form-navigation">
+        <button 
+          type="button" 
+          class="btn btn-secondary" 
+          (click)="previousStep()" 
+          *ngIf="currentStep > 1"
+        >
+          ← Voltar
+        </button>
+        
+        <button 
+          type="button" 
+          class="btn btn-primary" 
+          (click)="nextStep()" 
+          *ngIf="currentStep < 3"
+          [disabled]="!isCurrentStepValid()"
+        >
+          Continuar →
+        </button>
+        
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          *ngIf="currentStep === 3"
+          [disabled]="registerForm.invalid || isLoading"
+        >
+          <span *ngIf="!isLoading">Criar conta</span>
+          <div class="spinner" *ngIf="isLoading"></div>
+        </button>
+      </div>
+
+      <div class="alert alert-success" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
+      <div class="alert alert-error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+    </form>
+
+    <!-- Footer -->
+    <div class="register-footer">
+      <p>Já tem uma conta? <a routerLink="/login" class="login-link">Fazer login</a></p>
+    </div>
+  </div>
+</div>

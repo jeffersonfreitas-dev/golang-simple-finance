@@ -3,7 +3,7 @@ import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router, RouterLink } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
-import { ToastrService } from "ngx-toastr";
+import { markFormGroupTouched } from "../../shared/utils/form-utils";
 
 @Component({
     selector: 'app-login',
@@ -17,12 +17,13 @@ export class LoginComponent implements OnInit {
     showPassword = false;
     isLoading = false;
     errorMessage = '';
+    successMessage = '';
+    
 
     constructor(
         private fb: FormBuilder,
         private authService: AuthService,
         private router: Router,
-        private toastr: ToastrService
     ){}
     
     ngOnInit(): void {
@@ -31,6 +32,7 @@ export class LoginComponent implements OnInit {
         }
 
         this.initForm();
+        this.checkRememberedEmail();
     }
 
     private initForm(): void {
@@ -59,7 +61,7 @@ export class LoginComponent implements OnInit {
 
     onSubmit(): void {
         if (this.loginForm.invalid){
-            this.markFormGroupTouched(this.loginForm);
+            markFormGroupTouched(this.loginForm);
             return;
         }
 
@@ -75,7 +77,7 @@ export class LoginComponent implements OnInit {
             next: (resp) => {
                 console.log(resp)
                 this.isLoading = false;
-                this.toastr.success("Login realizado com sucesso!", "Bem-vindo!")
+                this.successMessage = "Login realizado com sucesso!"
 
                 if (this.rememberMe.value){
                     localStorage.setItem('rememberedEmail', this.email.value);
@@ -99,21 +101,10 @@ export class LoginComponent implements OnInit {
                 } else {
                     this.errorMessage = error.error?.message || 'Erro ao fazer login. Tente novamente';
                 }
-
-                this.toastr.error(this.errorMessage, 'Erro no login');                
             }
         })
     }
 
-
-    private markFormGroupTouched(formGroup: FormGroup): void {
-        Object.values(formGroup.controls).forEach(control => {
-            control.markAsTouched();
-            if (control instanceof FormGroup){
-                this.markFormGroupTouched(control);
-            }
-        });
-    }
 
     checkRememberedEmail(): void {
         const rememberedEmail = localStorage.getItem('rememberedEmail');
