@@ -22,7 +22,7 @@ func main() {
 	err := godotenv.Load()
 
 	if err != nil {
-		logrus.Fatalf("No .env file found")
+		logrus.Fatalf("No .env file found: ", err)
 	}
 
 	logrus.SetFormatter(&logrus.JSONFormatter{})

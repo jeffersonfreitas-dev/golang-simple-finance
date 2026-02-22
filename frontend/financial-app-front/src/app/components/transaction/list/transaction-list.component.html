@@ -1,0 +1,232 @@
+<div class="page-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1>Transações</h1>
+      <p>Gerencie todas suas contas a pagar e receber</p>
+    </div>
+    <button class="btn btn-primary" routerLink="/transactions/new">
+      <span class="btn-icon">+</span>
+      Nova Transação
+    </button>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="summary-cards">
+    <div class="summary-card">
+      <div class="summary-icon receivable">💰</div>
+      <div class="summary-info">
+        <span class="summary-label">A Receber</span>
+        <span class="summary-value">{{ summary?.totalReceivables | currency:'BRL' }}</span>
+        <span class="summary-sub">Pago: {{ summary?.paidReceivables | currency:'BRL' }}</span>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-icon payable">💳</div>
+      <div class="summary-info">
+        <span class="summary-label">A Pagar</span>
+        <span class="summary-value">{{ summary?.totalPayables | currency:'BRL' }}</span>
+        <span class="summary-sub">Pago: {{ summary?.paidPayables | currency:'BRL' }}</span>
+      </div>
+    </div>
+
+    <!-- <span class="summary-value" [class.positive]="summary?.balance > 0" [class.negative]="summary?.balance < 0"> -->
+    <div class="summary-card">
+      <div class="summary-icon balance">⚖️</div>
+      <div class="summary-info">
+        <span class="summary-label">Saldo</span>
+        <span>
+          {{ summary?.balance | currency:'BRL' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-icon overdue">⚠️</div>
+      <div class="summary-info">
+        <span class="summary-label">Vencidos</span>
+        <span class="summary-value">{{ summary?.overdueCount }}</span>
+        <span class="summary-sub">itens atrasados</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-card">
+    <div class="filters-header">
+      <h3>Filtros</h3>
+      <button class="btn-clear" (click)="clearFilters()" *ngIf="hasActiveFilters()">
+        Limpar Filtros
+      </button>
+    </div>
+
+    <div class="filters-grid">
+      <div class="filter-group">
+        <label class="filter-label">Tipo</label>
+        <select class="filter-select" [(ngModel)]="filters.type" (change)="applyFilters()">
+          <option value="">Todos</option>
+          <option value="receivable">A Receber</option>
+          <option value="payable">A Pagar</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Status</label>
+        <select class="filter-select" [(ngModel)]="filters.status" (change)="applyFilters()">
+          <option value="">Todos</option>
+          <option value="pending">Pendente</option>
+          <option value="paid">Pago</option>
+          <option value="overdue">Vencido</option>
+          <option value="cancelled">Cancelado</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Período</label>
+        <div class="date-range">
+          <input type="date" class="filter-input" [(ngModel)]="filters.startDate" (change)="applyFilters()">
+          <span>até</span>
+          <input type="date" class="filter-input" [(ngModel)]="filters.endDate" (change)="applyFilters()">
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Buscar</label>
+        <div class="search-box">
+          <input type="text" class="filter-input" placeholder="Descrição..." [(ngModel)]="filters.search" (keyup.enter)="applyFilters()">
+          <button class="btn-search" (click)="applyFilters()">🔍</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick filters -->
+    <div class="quick-filters">
+      <button class="quick-filter" [class.active]="quickFilter === 'today'" (click)="setQuickFilter('today')">Hoje</button>
+      <button class="quick-filter" [class.active]="quickFilter === 'week'" (click)="setQuickFilter('week')">Esta semana</button>
+      <button class="quick-filter" [class.active]="quickFilter === 'month'" (click)="setQuickFilter('month')">Este mês</button>
+      <button class="quick-filter" [class.active]="quickFilter === 'overdue'" (click)="setQuickFilter('overdue')">Vencidos</button>
+    </div>
+  </div>
+
+  <!-- Transactions Table -->
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Descrição</th>
+          <th>Categoria</th>
+          <th>Valor</th>
+          <th>Vencimento</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let transaction of transactions">
+          <td>
+            <span class="badge" [class.badge-info]="transaction.type === 'receivable'" [class.badge-warning]="transaction.type === 'payable'">
+              {{ transaction.type === 'receivable' ? '📥 Receber' : '📤 Pagar' }}
+            </span>
+          </td>
+          <td>{{ transaction.description }}</td>
+          <td>
+            <span class="category-tag" *ngIf="transaction.category">
+              {{ transaction.category }}
+            </span>
+            <span class="no-category" *ngIf="!transaction.category">-</span>
+          </td>
+          <td class="amount" [class.receivable]="transaction.type === 'receivable'" [class.payable]="transaction.type === 'payable'">
+            {{ transaction.amount | currency:'BRL' }}
+          </td>
+          <td>
+            <span class="due-date" [class.overdue]="isOverdue(transaction)">
+              {{ transaction.dueDate | date:'dd/MM/yyyy' }}
+            </span>
+          </td>
+          <td>
+            <span class="badge" [class]="getStatusClass(transaction.status)">
+              {{ getStatusLabel(transaction.status) }}
+            </span>
+          </td>
+          <td class="actions">
+            <button class="btn-icon" (click)="viewTransaction(transaction)" title="Visualizar">
+              👁️
+            </button>
+            <button class="btn-icon" (click)="editTransaction(transaction)" title="Editar">
+              ✏️
+            </button>
+            <button class="btn-icon" (click)="confirmDelete(transaction)" title="Excluir">
+              🗑️
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="isLoading">
+          <td colspan="7" class="loading-row">
+            <div class="spinner"></div>
+          </td>
+        </tr>
+
+        <tr *ngIf="!isLoading && transactions.length === 0">
+          <td colspan="7" class="no-data">
+            <div class="empty-state">
+              <span class="empty-icon">📭</span>
+              <h3>Nenhuma transação encontrada</h3>
+              <p>Comece criando sua primeira transação</p>
+              <button class="btn btn-primary" routerLink="/transactions/new">
+                Criar Transação
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button class="btn-page" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
+      ←
+    </button>
+    
+    <div class="page-numbers">
+      <button *ngFor="let page of getPageNumbers()" 
+              class="btn-page" 
+              [class.active]="page === currentPage"
+              (click)="changePage(page)">
+        {{ page }}
+      </button>
+    </div>
+    
+    <button class="btn-page" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">
+      →
+    </button>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" [class.show]="showDeleteModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Confirmar Exclusão</h3>
+      <button class="modal-close" (click)="closeDeleteModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <p>Tem certeza que deseja excluir esta transação?</p>
+      <div class="transaction-preview">
+        <p class="transaction-desc">{{ selectedTransaction?.description }}</p>
+        <p class="transaction-amount">{{ selectedTransaction?.amount | currency:'BRL' }}</p>
+      </div>
+      <p class="warning-text">Esta ação não pode ser desfeita.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="closeDeleteModal()">Cancelar</button>
+      <button class="btn btn-danger" (click)="deleteTransaction()" [disabled]="isDeleting">
+        <span *ngIf="!isDeleting">Excluir</span>
+        <div class="spinner" *ngIf="isDeleting"></div>
+      </button>
+    </div>
+  </div>
+</div>

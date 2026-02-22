@@ -1,0 +1,172 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>{{ isEditing ? 'Editar' : 'Nova' }} Transação</h1>
+      <p>{{ isEditing ? 'Edite os dados da transação' : 'Preencha os dados da nova transação' }}</p>
+    </div>
+    <button class="btn btn-secondary" routerLink="/transactions">
+      ← Voltar
+    </button>
+  </div>
+
+  <div class="form-container">
+    <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()" class="transaction-form">
+      <!-- Tipo de Transação -->
+      <div class="form-section">
+        <h3>Tipo de Transação</h3>
+        <div class="type-selector">
+          <label class="type-option" [class.selected]="type?.value === 'receivable'">
+            <input type="radio" formControlName="type" value="receivable">
+            <span class="type-icon receivable">📥</span>
+            <span class="type-label">A Receber</span>
+          </label>
+          
+          <label class="type-option" [class.selected]="type?.value === 'payable'">
+            <input type="radio" formControlName="type" value="payable">
+            <span class="type-icon payable">📤</span>
+            <span class="type-label">A Pagar</span>
+          </label>
+        </div>
+        <div class="form-error" *ngIf="type?.invalid && type?.touched">
+          Selecione o tipo de transação
+        </div>
+      </div>
+
+      <!-- Informações Básicas -->
+      <div class="form-section">
+        <h3>Informações Básicas</h3>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Descrição *</label>
+            <input 
+              type="text" 
+              class="form-input" 
+              formControlName="description" 
+              placeholder="Ex: Salário, Aluguel, etc."
+              [class.is-invalid]="description?.invalid && description?.touched"
+            >
+            <div class="form-error" *ngIf="description?.invalid && description?.touched">
+              <span *ngIf="description?.errors?.['required']">Descrição é obrigatória</span>
+              <span *ngIf="description?.errors?.['minlength']">Mínimo 3 caracteres</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row grid-2">
+          <div class="form-group">
+            <label class="form-label">Valor *</label>
+            <div class="currency-input">
+              <span class="currency-symbol">R$</span>
+              <input 
+                type="number" 
+                class="form-input" 
+                formControlName="amount" 
+                step="0.01" 
+                min="0.01"
+                placeholder="0,00"
+                [class.is-invalid]="amount?.invalid && amount?.touched"
+              >
+            </div>
+            <div class="form-error" *ngIf="amount?.invalid && amount?.touched">
+              <span *ngIf="amount?.errors?.['required']">Valor é obrigatório</span>
+              <span *ngIf="amount?.errors?.['min']">Valor deve ser maior que zero</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Data de Vencimento *</label>
+            <input 
+              type="date" 
+              class="form-input" 
+              formControlName="dueDate"
+              [class.is-invalid]="dueDate.invalid && dueDate.touched"
+            >
+            <div class="form-error" *ngIf="dueDate.invalid && dueDate.touched">
+              <span *ngIf="dueDate.errors?.['required']">Data de vencimento é obrigatória</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informações Adicionais -->
+      <div class="form-section">
+        <h3>Informações Adicionais</h3>
+        
+        <div class="form-row grid-2">
+          <div class="form-group">
+            <label class="form-label">Categoria</label>
+            <select class="form-input" formControlName="category">
+              <option value="">Selecione uma categoria</option>
+              <option value="Alimentação">Alimentação</option>
+              <option value="Transporte">Transporte</option>
+              <option value="Moradia">Moradia</option>
+              <option value="Saúde">Saúde</option>
+              <option value="Educação">Educação</option>
+              <option value="Lazer">Lazer</option>
+              <option value="Investimentos">Investimentos</option>
+              <option value="Salário">Salário</option>
+              <option value="Outros">Outros</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select class="form-input" formControlName="status">
+              <option value="pending">Pendente</option>
+              <option value="paid">Pago</option>
+              <option value="cancelled">Cancelado</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Observações</label>
+            <textarea 
+              class="form-input" 
+              formControlName="notes" 
+              rows="4"
+              placeholder="Informações adicionais sobre a transação..."
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Data de Pagamento (mostrar apenas se status for 'paid') -->
+        <div class="form-row" *ngIf="status?.value === 'paid'">
+          <div class="form-group">
+            <label class="form-label">Data de Pagamento</label>
+            <input 
+              type="date" 
+              class="form-input" 
+              formControlName="paidAt"
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Botões -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" routerLink="/transactions">
+          Cancelar
+        </button>
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          [disabled]="transactionForm.invalid || isSaving"
+        >
+          <span *ngIf="!isSaving">{{ isEditing ? 'Salvar Alterações' : 'Criar Transação' }}</span>
+          <div class="spinner" *ngIf="isSaving"></div>
+        </button>
+      </div>
+
+      <div class="alert alert-success" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
+      <div class="alert alert-error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+    </form>
+  </div>
+</div>

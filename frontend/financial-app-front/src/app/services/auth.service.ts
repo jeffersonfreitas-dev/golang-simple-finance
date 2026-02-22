@@ -65,4 +65,8 @@ export class AuthService {
         const user = this.currentUserSubject.value;
         return user?.role === 'admin';
     }
+
+    get currentUserValue(): User | null {
+        return this.currentUserSubject.value;
+    }    
 }

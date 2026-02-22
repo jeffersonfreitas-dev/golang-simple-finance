@@ -32,5 +32,30 @@ export const routes: Routes = [
         loadComponent: () => 
             import('./components/dashboard/dashboard.component')
                 .then(m => m.DashboardComponent)
-    }    
+    },
+    {
+        path: 'transactions',
+        canActivate: [AuthGuard],
+        loadComponent: () => 
+            import('./components/transaction/list/transaction-list.component')
+                .then(m => m.TransactionListComponent)
+    },
+    {
+        path: 'transactions/new',
+        canActivate: [AuthGuard],
+        loadComponent: () => 
+            import('./components/transaction/form/transaction-form.component')
+                .then(m => m.TransactionFormComponent)
+    },
+    {
+        path: 'transactions/:id/edit',
+        canActivate: [AuthGuard],
+        loadComponent: () => 
+            import('./components/transaction/form/transaction-form.component')
+                .then(m => m.TransactionFormComponent)
+    },
+    {
+        path: '**',
+        redirectTo: ''
+    }        
 ];

@@ -1,27 +1,78 @@
+<nav class="dashboard-nav">
+  <div class="nav-container">
+    <div class="nav-logo">
+      <a routerLink="/dashboard" class="logo-link">
+        <span class="logo-icon">💰</span>
+        <span class="logo-text">FinancialApp</span>
+      </a>
+    </div>
+
+    <div class="nav-menu">
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <a routerLink="/transactions" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">💰</span>
+        <span class="nav-label">Transações</span>
+      </a>
+      <a routerLink="/reports" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📈</span>
+        <span class="nav-label">Relatórios</span>
+      </a>
+    </div>
+
+    <div class="nav-user">
+      <div class="user-info" (click)="toggleUserMenu()" #userMenu>
+        <div class="user-avatar">
+          {{ getUserInitials() }}
+        </div>
+        <div class="user-details">
+          <span class="user-name">{{ userName }}</span>
+          <span class="user-role">{{ userRole }}</span>
+        </div>
+        <span class="dropdown-icon">▼</span>
+        
+        <div class="dropdown-menu" *ngIf="showUserMenu">
+          <!-- <a routerLink="/profile" class="dropdown-item">
+            <span class="dropdown-icon">👤</span>
+            Meu Perfil
+          </a> -->
+          <!-- <a routerLink="/settings" class="dropdown-item">
+            <span class="dropdown-icon">⚙️</span>
+            Configurações
+          </a> -->
+          <!-- <div class="dropdown-divider"></div> -->
+          <button class="dropdown-item logout" (click)="logout()">
+            <span class="dropdown-icon">🚪</span>
+            Sair
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
 <div class="dashboard-container">
   <!-- Welcome Header -->
   <div class="welcome-header">
     <div>
       <h1>Olá, {{ userName }}! 👋</h1>
-      <!-- <p class="welcome-date">{{ currentDate | date:'EEEE, d \'de\' MMMM \'de\' yyyy' }}</p> -->
+      <p class="welcome-date">{{ currentDate | date:'EEEE, d \'de\' MMMM \'de\' yyyy' }}</p>
     </div>
     <div class="header-actions">
-      <!-- <button class="btn-icon" (click)="refreshData()" [class.rotating]="isRefreshing"> -->
-        <!-- 🔄
-      </button> -->
+      <button class="btn-icon" (click)="refreshData()" [class.rotating]="isRefreshing">
+        🔄
+      </button>
       <button class="btn btn-primary" routerLink="/transactions/new">
         <span class="btn-icon">+</span>
         Nova Transação
-      </button>
-      <button class="btn btn-primary" (click)="logout()">
-        <span class="btn-icon">+</span>
-        Logout
       </button>
     </div>
   </div>
 
   <!-- Summary Cards -->
-  <!-- <div class="summary-cards">
+  <div class="summary-cards">
     <div class="summary-card" *ngFor="let card of summaryCards">
       <div class="summary-icon" [style.background]="card.bgColor">
         {{ card.icon }}
@@ -34,10 +85,10 @@
         </span>
       </div>
     </div>
-  </div> -->
+  </div>
 
   <!-- Charts Row -->
-  <!-- <div class="charts-row">
+  <div class="charts-row">
     <div class="chart-card">
       <div class="chart-header">
         <h3>Fluxo de Caixa</h3>
@@ -64,12 +115,12 @@
         <canvas id="categoryChart"></canvas>
       </div>
     </div>
-  </div> -->
+  </div>
 
   <!-- Recent Transactions and Daily Extract -->
-  <!-- <div class="content-row"> -->
+  <div class="content-row">
     <!-- Recent Transactions -->
-    <!-- <div class="recent-card">
+    <div class="recent-card">
       <div class="card-header">
         <h3>Transações Recentes</h3>
         <a routerLink="/transactions" class="view-all">Ver todas →</a>
@@ -103,10 +154,10 @@
           <p>Nenhuma transação recente</p>
         </div>
       </div>
-    </div> -->
+    </div>
 
     <!-- Daily Extract -->
-    <!-- <div class="extract-card">
+    <div class="extract-card">
       <div class="card-header">
         <h3>Extrato do Dia</h3>
         <div class="extract-controls">
@@ -162,10 +213,10 @@
         </button>
       </div>
     </div> 
-  </div>-->
+  </div>
 
   <!-- Upcoming Payments -->
-  <!-- <div class="upcoming-card">
+  <div class="upcoming-card">
     <div class="card-header">
       <h3>Próximos Vencimentos</h3>
       <a routerLink="/transactions" class="view-all">Ver todos →</a>
@@ -187,5 +238,5 @@
         <p>Nenhum pagamento próximo</p>
       </div>
     </div>
-  </div> -->
+  </div>
 </div>
