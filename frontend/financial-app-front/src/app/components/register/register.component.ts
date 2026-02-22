@@ -36,16 +36,14 @@ export class RegisterComponent implements OnInit {
 
     private initForm() : void {
         this.registerForm = this.fb.group({
-            name: ['', [Validators.required, Validators.minLength(3)]],
-            email: ['', [Validators.required, Validators.email]], 
+            name: ['jeffers', [Validators.required, Validators.minLength(3)]],
+            email: ['jeff@email.com', [Validators.required, Validators.email]], 
 
-            password: ['', [Validators.required, Validators.minLength(6)]],
-            confirmPassword: ['', [Validators.required]],
+            password: ['abcABC123*', [Validators.required, Validators.minLength(6)]],
+            confirmPassword: ['abcABC123*', [Validators.required]],
 
-            phone: [''],
-            referral: [''],
-            terms: [false, Validators.requiredTrue],
-            newsletter: [false]            
+            phone: ['859585522222'],
+            referral: ['google']
         }), { validators: this.passwordMatchValidator };
     }
 
@@ -83,14 +81,6 @@ export class RegisterComponent implements OnInit {
 
     get referral(): FormControl {
         return this.registerForm.get('referral') as FormControl;
-    }
-
-    get terms(): FormControl {
-        return this.registerForm.get('terms') as FormControl;
-    }
-
-    get newsletter(): FormControl {
-        return this.registerForm.get('newsletter') as FormControl;
     }
 
     get progressWidth(): number {
@@ -134,8 +124,6 @@ export class RegisterComponent implements OnInit {
             return this.name.valid && this.email.valid;
         case 2:
             return this.password.valid && this.confirmPassword.valid;
-        case 3:
-            return this.terms.valid;
         default:
             return false;
         }
@@ -154,6 +142,7 @@ export class RegisterComponent implements OnInit {
     }
 
     onSubmit(): void {
+        
         if (this.registerForm.invalid){
             markFormGroupTouched(this.registerForm);
             return;
@@ -167,8 +156,7 @@ export class RegisterComponent implements OnInit {
             email : this.email. value,
             password : this.password.value,
             phone: this.phone.value,
-            referral : this.referral.value,
-            newsletter : this.newsletter.value
+            referral : this.referral.value
         };
 
         this.authService.register(userData).subscribe({

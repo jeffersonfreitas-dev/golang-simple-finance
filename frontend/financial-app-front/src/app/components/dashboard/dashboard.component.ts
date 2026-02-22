@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 // import Chart from 'chart.js/auto';
 // import { TransactionService } from '../../services/transaction.service';
-// import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 // import { Transaction, DailyExtract, FinancialSummary } from '../../models/transaction.model';
 
 @Component({
@@ -19,11 +19,17 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   currentDate = new Date();
   isRefreshing = false;
 
+  constructor(private authService: AuthService){}
+
   ngAfterViewInit(): void {
     console.log("teste")    
   }
   ngOnInit(): void {
     console.log("testing")
+  }
+
+  logout(): void {
+    this.authService.logout()
   }
 
 
