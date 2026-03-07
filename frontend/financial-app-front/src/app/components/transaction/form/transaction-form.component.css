@@ -103,6 +103,12 @@
   border-top: 1px solid var(--border-color);
 }
 
+.page-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .transaction-form {

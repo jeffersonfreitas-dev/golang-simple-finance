@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-// import { TransactionService } from '../../services/transaction.service';
+import { MenuComponent } from '../../menu/menu.component';
+import { TransactionService } from '../../../services/transaction.service';
 
 @Component({
   selector: 'app-transaction-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, MenuComponent],
   templateUrl: './transaction-form.component.html',
   styleUrls: ['./transaction-form.component.css']
 })
@@ -23,7 +24,7 @@ export class TransactionFormComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    // private transactionService: TransactionService
+    private transactionService: TransactionService
   ) {}
 
   ngOnInit(): void {
@@ -131,22 +132,21 @@ export class TransactionFormComponent implements OnInit {
     //     }
     //   });
     } else {
-      // Create new transaction
-    //   this.transactionService.createTransaction(formData).subscribe({
-    //     next: () => {
-    //       this.isSaving = false;
-    //       this.successMessage = 'Transação criada com sucesso!';
+      this.transactionService.createTransaction(formData).subscribe({
+        next: () => {
+          this.isSaving = false;
+          this.successMessage = 'Transação criada com sucesso!';
           
-    //       setTimeout(() => {
-    //         this.router.navigate(['/transactions']);
-    //       }, 1500);
-    //     },
-    //     error: (error) => {
-    //       this.isSaving = false;
-    //       console.error('Error creating transaction:', error);
-    //       this.errorMessage = error.error?.message || 'Erro ao criar transação';
-    //     }
-    //   });
+          setTimeout(() => {
+            this.router.navigate(['/transactions']);
+          }, 1000);
+        },
+        error: (error) => {
+          this.isSaving = false;
+          console.error('Error creating transaction:', error);
+          this.errorMessage = error.error?.message || 'Erro ao criar transação';
+        }
+      });
     }
   }
 

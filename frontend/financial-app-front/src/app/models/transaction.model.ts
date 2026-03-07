@@ -63,3 +63,14 @@ export interface FinancialSummary {
   paidPayables: number;
   overdueCount: number;
 }
+
+
+export interface TransactionFilterParams{
+    type?: string;
+    status?: string;
+    startDate?: string;
+    endDate?: string;
+    page?: number;
+    limit?: number;
+    search?: string;
+}

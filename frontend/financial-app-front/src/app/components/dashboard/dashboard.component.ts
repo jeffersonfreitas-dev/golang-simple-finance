@@ -6,11 +6,12 @@ import Chart from 'chart.js/auto';
 // import { TransactionService } from '../../services/transaction.service';
 import { AuthService } from '../../services/auth.service';
 import { DailyExtract, FinancialSummary, Transaction } from '../../models/transaction.model';
+import { MenuComponent } from '../menu/menu.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, MenuComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })

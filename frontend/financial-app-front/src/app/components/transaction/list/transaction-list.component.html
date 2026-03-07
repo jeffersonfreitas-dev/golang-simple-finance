@@ -1,3 +1,4 @@
+<app-menu></app-menu>
 <div class="page-container">
   <!-- Header -->
   <div class="page-header">
@@ -6,7 +7,7 @@
       <p>Gerencie todas suas contas a pagar e receber</p>
     </div>
     <button class="btn btn-primary" routerLink="/transactions/new">
-      <span class="btn-icon">+</span>
+      <span class="btn-icon" style="background-color: #2c77bd;">+</span>
       Nova Transação
     </button>
   </div>
@@ -127,7 +128,7 @@
         <tr *ngFor="let transaction of transactions">
           <td>
             <span class="badge" [class.badge-info]="transaction.type === 'receivable'" [class.badge-warning]="transaction.type === 'payable'">
-              {{ transaction.type === 'receivable' ? '📥 Receber' : '📤 Pagar' }}
+              {{ transaction.type === 'receivable' ? 'Receber' : 'Pagar' }}
             </span>
           </td>
           <td>{{ transaction.description }}</td>
@@ -137,11 +138,11 @@
             </span>
             <span class="no-category" *ngIf="!transaction.category">-</span>
           </td>
-          <td class="amount" [class.receivable]="transaction.type === 'receivable'" [class.payable]="transaction.type === 'payable'">
+          <td class="amount">
             {{ transaction.amount | currency:'BRL' }}
           </td>
           <td>
-            <span class="due-date" [class.overdue]="isOverdue(transaction)">
+            <span class="due-date">
               {{ transaction.dueDate | date:'dd/MM/yyyy' }}
             </span>
           </td>
