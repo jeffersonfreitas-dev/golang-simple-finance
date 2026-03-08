@@ -467,7 +467,7 @@
 
 .upcoming-amount {
   font-weight: 600;
-  color: var(--danger-color);
+  color: #000;
   margin: 0 15px;
 }
 

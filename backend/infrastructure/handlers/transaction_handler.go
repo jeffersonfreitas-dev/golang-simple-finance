@@ -216,6 +216,50 @@ func (h *TransactionHandler) GetTransaction(c *gin.Context) {
 	c.JSON(http.StatusOK, transaction)
 }
 
+func (h *TransactionHandler) GetDailyExtract(c *gin.Context) {
+	userID, _ := c.Get("user_id")
+
+	date := time.Now()
+	if dateStr := c.Query("date"); dateStr != "" {
+		parsed, err := time.Parse(time.RFC3339, dateStr)
+		if err == nil {
+			date = parsed
+		}
+	}
+
+	balance, err := h.transactionRepo.GetDailyBalance(userID.(uuid.UUID), date)
+	if err != nil {
+		logrus.WithError(err).Error("Failed to get daily balance")
+		c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: "Failed to get daily balance"})
+		return
+	}
+
+	transactions, err := h.transactionRepo.GetDailyExtract(userID.(uuid.UUID), date)
+	if err != nil {
+		logrus.WithError(err).Error("Failed to get daily extract")
+		c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: "Failed to get daily extract"})
+		return
+	}
+
+	response := dto.DailyExtractResponse{
+		Date: date.Format("2006-01-02"),
+		Balance: dto.DailyBalanceResponse{
+			Date:           balance.Date.Format("2006-01-02"),
+			OpeningBalance: balance.OpeningBalance,
+			Incoming:       balance.Incoming,
+			Outgoing:       balance.Outgoing,
+			ClosingBalance: balance.ClosingBalance,
+		},
+		Transactions: make([]dto.TransactionResponse, len(transactions)),
+	}
+
+	for i, t := range transactions {
+		response.Transactions[i] = toTransactionResponse(&t)
+	}
+
+	c.JSON(http.StatusOK, response)
+}
+
 func toTransactionResponse(t *entities.Transaction) dto.TransactionResponse {
 	return dto.TransactionResponse{
 		ID:          t.ID,

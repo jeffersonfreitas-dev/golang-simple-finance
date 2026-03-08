@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import Chart from 'chart.js/auto';
-// import { TransactionService } from '../../services/transaction.service';
 import { AuthService } from '../../services/auth.service';
-import { DailyExtract, FinancialSummary, Transaction } from '../../models/transaction.model';
+import { DailyExtract, FinancialSummary, Transaction, TransactionFilterParams } from '../../models/transaction.model';
 import { MenuComponent } from '../menu/menu.component';
+import { TransactionService } from '../../services/transaction.service';
+import { ReportService } from '../../services/reports.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,9 +38,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   selectedDate = new Date();
 
   constructor(
-    // private transactionService: TransactionService,
+    private transactionService: TransactionService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private reportService: ReportService
   ) {}
 
   ngAfterViewInit(): void {
@@ -65,6 +67,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.loadUserData();
+    this.refreshData();
   }
 
   private loadUserData(): void {
@@ -87,190 +90,54 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     const startDate = new Date();
     startDate.setMonth(startDate.getMonth() - 1);
 
-    // this.transactionService.getSummary(startDate, endDate).subscribe({
-    //   next: (summary) => {
-        const summary = {
-          totalReceivables: 152.0,
-          totalPayables: 1562.6,
-          balance: 52.6,
-          paidReceivables: 52.0,
-          paidPayables: 21.0,
-          overdueCount: 62.0,          
-        }
+    this.reportService.getSummary(startDate, endDate).subscribe({
+      next: (summary) => {
         this.updateSummaryCards(summary);
-    //   },
-    //   error: (error) => {
-    //     console.error('Error loading summary:', error);
-    //   }
-    // });
+      },
+      error: (error) => {
+        console.error('Error loading summary:', error);
+      }
+    });
   }
 
   private loadRecentTransactions(): void {
-    // this.transactionService.listTransactions({ limit: 5 }).subscribe({
-    //   next: (response) => {
-    //     this.recentTransactions = response.data;
-    //   },
-    //   error: (error) => {
-    //     console.error('Error loading recent transactions:', error);
-    //   }
-    // });
-
- // Mock data para demonstração
-  this.recentTransactions = [
-    {
-      id: '1',
-      userId: '1',
-      type: 'receivable',
-      description: 'Salário',
-      amount: 5000,
-      status: 'paid',
-      dueDate: new Date(),
-      paidAt: new Date(),
-      createdAt: new Date(),
-      category: 'Salário'
-    },
-    {
-      id: '2',
-      userId: '1',
-      type: 'payable',
-      description: 'Aluguel',
-      amount: 1500,
-      status: 'pending',
-      dueDate: new Date(new Date().setDate(new Date().getDate() + 5)),
-      createdAt: new Date(),
-      category: 'Moradia'
-    },
-    {
-      id: '3',
-      userId: '1',
-      type: 'payable',
-      description: 'Supermercado',
-      amount: 350.75,
-      status: 'paid',
-      dueDate: new Date(new Date().setDate(new Date().getDate() - 2)),
-      paidAt: new Date(new Date().setDate(new Date().getDate() - 2)),
-      createdAt: new Date(new Date().setDate(new Date().getDate() - 2)),
-      category: 'Alimentação'
-    },
-    {
-      id: '4',
-      userId: '1',
-      type: 'receivable',
-      description: 'Freelance',
-      amount: 1200,
-      status: 'pending',
-      dueDate: new Date(new Date().setDate(new Date().getDate() + 10)),
-      createdAt: new Date(),
-      category: 'Trabalho'
-    },
-    {
-      id: '5',
-      userId: '1',
-      type: 'payable',
-      description: 'Internet',
-      amount: 89.90,
-      status: 'overdue',
-      dueDate: new Date(new Date().setDate(new Date().getDate() - 5)),
-      createdAt: new Date(new Date().setDate(new Date().getDate() - 35)),
-      category: 'Serviços'
-    }
-  ];    
+    this.transactionService.listTransactions({ limit: 5 }).subscribe({
+      next: (response) => {
+        this.recentTransactions = response.data;
+      },
+      error: (error) => {
+        console.error('Error loading recent transactions:', error);
+      }
+    });
   }
   
   private loadUpcomingPayments(): void {
-  // Mock data para demonstração
-    this.upcomingPayments = [
-      {
-        id: '1',
-        userId: '1',
-        type: 'payable',
-        description: 'Aluguel',
-        amount: 1500,
-        status: 'pending',
-        dueDate: new Date(new Date().setDate(new Date().getDate() + 2)),
-        createdAt: new Date()
+    const filters : TransactionFilterParams = {
+      page: 0,
+      limit: 5,
+      status: 'pending',
+      endDate: new Date(new Date().setDate(new Date().getDate() + 60)).toISOString()
+    }
+
+    this.transactionService.listTransactions(filters).subscribe({
+      next: (resp) => {
+        this.upcomingPayments = resp.data
       },
-      {
-        id: '2',
-        userId: '1',
-        type: 'payable',
-        description: 'Internet',
-        amount: 120,
-        status: 'pending',
-        dueDate: new Date(new Date().setDate(new Date().getDate() + 5)),
-        createdAt: new Date()
-      },
-      {
-        id: '3',
-        userId: '1',
-        type: 'payable',
-        description: 'Energia',
-        amount: 280,
-        status: 'pending',
-        dueDate: new Date(new Date().setDate(new Date().getDate() + 7)),
-        createdAt: new Date()
+      error: (error) => {
+        console.error('Error loading transactions:', error);
       }
-    ];
+    })
   }
   
   loadDailyExtract(): void {
-    // this.transactionService.getDailyExtract(this.selectedDate).subscribe({
-    //   next: (extract) => {
-    //     this.dailyExtract = extract;
-    //   },
-    //   error: (error) => {
-    //     console.error('Error loading daily extract:', error);
-    //   }
-    // });
-
-    // Mock data para demonstração
-    this.dailyExtract = {
-      date: this.selectedDate.toISOString(),
-      balance: {
-        date: this.selectedDate.toISOString(),
-        openingBalance: 5000,
-        incoming: 1200,
-        outgoing: 800,
-        closingBalance: 5400
+    this.reportService.getDailyExtract(this.selectedDate).subscribe({
+      next: (extract) => {
+        this.dailyExtract = extract;
       },
-      transactions: [
-        {
-          id: '1',
-          userId: '1',
-          type: 'receivable',
-          description: 'Salário',
-          amount: 5000,
-          status: 'paid',
-          dueDate: this.selectedDate,
-          paidAt: this.selectedDate,
-          createdAt: this.selectedDate
-        },
-        {
-          id: '2',
-          userId: '1',
-          type: 'payable',
-          description: 'Supermercado',
-          amount: 350,
-          status: 'paid',
-          dueDate: this.selectedDate,
-          paidAt: this.selectedDate,
-          createdAt: this.selectedDate,
-          category: 'Alimentação'
-        },
-        {
-          id: '3',
-          userId: '1',
-          type: 'payable',
-          description: 'Farmácia',
-          amount: 89.90,
-          status: 'paid',
-          dueDate: this.selectedDate,
-          paidAt: this.selectedDate,
-          createdAt: this.selectedDate,
-          category: 'Saúde'
-        }
-      ]
-    };    
+      error: (error) => {
+        console.error('Error loading daily extract:', error);
+      }
+    });  
   }
   
   refreshData(): void {

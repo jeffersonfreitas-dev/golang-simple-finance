@@ -36,7 +36,7 @@ func SetupRoutes(router *gin.Engine, db *gorm.DB, jwtService auth.JWTService) {
 		protected.DELETE("/transactions/:id", transactionHandler.DeleteTransaction)
 
 		// Reports
-		// protected.GET("/reports/daily-extract", transactionHandler.GetDailyExtract)
+		protected.GET("/reports/daily-extract", transactionHandler.GetDailyExtract)
 		protected.GET("/reports/summary", transactionHandler.GetSummary)
 	}
 

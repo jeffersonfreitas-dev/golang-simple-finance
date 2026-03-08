@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environments";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { CreateTransactionRequest, FinancialSummary, Transaction, TransactionFilterParams, TransactionListResponse } from "../models/transaction.model";
+import { CreateTransactionRequest, Transaction, TransactionFilterParams, TransactionListResponse } from "../models/transaction.model";
 import { Observable } from "rxjs";
 
 @Injectable({

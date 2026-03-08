@@ -15,10 +15,10 @@ type TransactionResponse struct {
 	Amount      float64                    `json:"amount"`
 	Status      entities.TransactionStatus `json:"status"`
 	DueDate     time.Time                  `json:"dueDate"`
-	PaidAt      *time.Time                 `json:"paid_at"`
+	PaidAt      *time.Time                 `json:"paidAt"`
 	Category    string                     `json:"category"`
 	Notes       string                     `json:"notes"`
-	CreatedAt   time.Time                  `json:"created_at"`
+	CreatedAt   time.Time                  `json:"createdAt"`
 }
 
 type CreateTransactionRequest struct {
@@ -37,4 +37,18 @@ type TransactionListResponse struct {
 	Page       int                   `json:"page"`
 	Limit      int                   `json:"limit"`
 	TotalPages int                   `json:"total_pages"`
+}
+
+type DailyBalanceResponse struct {
+	Date           string  `json:"date"`
+	OpeningBalance float64 `json:"openingBalance"`
+	Incoming       float64 `json:"incoming"`
+	Outgoing       float64 `json:"outgoing"`
+	ClosingBalance float64 `json:"closingBalance"`
+}
+
+type DailyExtractResponse struct {
+	Date         string                `json:"date"`
+	Balance      DailyBalanceResponse  `json:"balance"`
+	Transactions []TransactionResponse `json:"transactions"`
 }

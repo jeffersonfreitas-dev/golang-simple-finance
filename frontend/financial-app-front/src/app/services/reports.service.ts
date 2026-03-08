@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environments";
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { FinancialSummary } from "../models/transaction.model";
+import { DailyExtract, FinancialSummary } from "../models/transaction.model";
 import { Observable } from "rxjs";
 
 @Injectable({
@@ -19,4 +19,13 @@ export class ReportService{
         
         return this.http.get<FinancialSummary>(`${this.apiUrl}/summary`, {params});
     }        
+
+
+    getDailyExtract(date?: Date): Observable<DailyExtract> {
+        let params = new HttpParams();
+        if (date) {
+            params = params.set('date', date.toISOString());
+        }
+        return this.http.get<DailyExtract>(`${this.apiUrl}/daily-extract`, { params });
+    }    
 }
