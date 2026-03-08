@@ -31,12 +31,12 @@ type Transaction struct {
 	Description string            `gorm:"not null" json:"description" validate:"required"`
 	Amount      float64           `gorm:"type:decimal(15,2);not null" json:"amount" validate:"required,gt=0"`
 	Status      TransactionStatus `gorm:"type:varchar(20);not null;default:'pending'" json:"status"`
-	DueDate     time.Time         `gorm:"not null;index" json:"due_date"`
-	PaidAt      *time.Time        `json:"paid_at"`
+	DueDate     time.Time         `gorm:"not null;index" json:"dueDate"`
+	PaidAt      *time.Time        `json:"paidAt"`
 	Category    string            `json:"category"`
 	Notes       string            `json:"notes"`
-	CreatedAt   time.Time         `json:"created_at"`
-	UpdatedAt   time.Time         `json:"updated_at"`
+	CreatedAt   time.Time         `json:"createdAt"`
+	UpdatedAt   time.Time         `json:"updatedAt"`
 	DeletedAt   gorm.DeletedAt    `gorm:"index" json:"-"`
 }
 

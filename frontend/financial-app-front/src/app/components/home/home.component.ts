@@ -12,7 +12,6 @@ import { RouterLink } from '@angular/router';
 export class HomeComponent {
  isScrolled = false;
   mobileMenuOpen = false;
-  showDemoModal = false;
 
   features = [
     {
@@ -150,15 +149,4 @@ export class HomeComponent {
     this.mobileMenuOpen = !this.mobileMenuOpen;
   }
 
-  showDemo(): void {
-    this.showDemoModal = true;
-    document.body.style.overflow = 'hidden';
-  }
-
-  closeDemo(event: MouseEvent): void {
-    if ((event.target as HTMLElement).classList.contains('modal')) {
-      this.showDemoModal = false;
-      document.body.style.overflow = 'auto';
-    }
-  }
 }

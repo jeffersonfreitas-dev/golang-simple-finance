@@ -43,10 +43,6 @@
               Começar Agora
               <span class="btn-arrow">→</span>
             </button>
-            <button class="btn-video" (click)="showDemo()">
-              <span class="play-icon">▶</span>
-              Ver Demo
-            </button>
           </div>
 
           <div class="hero-stats animate-fade-up delay-3">
@@ -229,22 +225,4 @@
       <p>&copy; 2026 FinancialApp. Todos os direitos reservados.</p>
     </div>
   </footer>
-
-  <!-- Demo Modal -->
-  <div class="modal" [class.show]="showDemoModal" (click)="closeDemo($event)">
-    <div class="modal-content">
-      <button class="modal-close" (click)="showDemoModal = false">×</button>
-      <div class="video-container">
-        <iframe 
-          width="100%" 
-          height="400" 
-          src="https://www.youtube.com/embed/demo" 
-          title="Demo Video"
-          frameborder="0" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-          allowfullscreen>
-        </iframe>
-      </div>
-    </div>
-  </div>
 </div>

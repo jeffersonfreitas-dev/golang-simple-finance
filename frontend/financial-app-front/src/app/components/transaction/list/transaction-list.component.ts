@@ -195,14 +195,6 @@ export class TransactionListComponent implements OnInit {
     return labels[status as keyof typeof labels] || status;
   }
 
-  viewTransaction(transaction: Transaction): void {
-    // Navigate to transaction detail
-  }
-
-  editTransaction(transaction: Transaction): void {
-    // Navigate to edit form
-  }
-
   confirmDelete(transaction: Transaction): void {
     this.selectedTransaction = transaction;
     this.showDeleteModal = true;

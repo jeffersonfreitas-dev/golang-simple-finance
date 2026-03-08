@@ -78,8 +78,6 @@
           <option value="">Todos</option>
           <option value="pending">Pendente</option>
           <option value="paid">Pago</option>
-          <option value="overdue">Vencido</option>
-          <option value="cancelled">Cancelado</option>
         </select>
       </div>
 
@@ -106,7 +104,6 @@
       <button class="quick-filter" [class.active]="quickFilter === 'today'" (click)="setQuickFilter('today')">Hoje</button>
       <button class="quick-filter" [class.active]="quickFilter === 'week'" (click)="setQuickFilter('week')">Esta semana</button>
       <button class="quick-filter" [class.active]="quickFilter === 'month'" (click)="setQuickFilter('month')">Este mês</button>
-      <button class="quick-filter" [class.active]="quickFilter === 'overdue'" (click)="setQuickFilter('overdue')">Vencidos</button>
     </div>
   </div>
 
@@ -152,10 +149,7 @@
             </span>
           </td>
           <td class="actions">
-            <button class="btn-icon" (click)="viewTransaction(transaction)" title="Visualizar">
-              👁️
-            </button>
-            <button class="btn-icon" (click)="editTransaction(transaction)" title="Editar">
+            <button class="btn-icon" [routerLink]="['/transactions', transaction.id, 'edit']" title="Editar">
               ✏️
             </button>
             <button class="btn-icon" (click)="confirmDelete(transaction)" title="Excluir">

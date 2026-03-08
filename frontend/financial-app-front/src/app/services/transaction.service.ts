@@ -16,6 +16,14 @@ export class TransactionService{
         return this.http.post<Transaction>(`${this.apiUrl}`, data);
     }
 
+    updateTransaction(id: string, data: CreateTransactionRequest): Observable<Transaction>{
+        return this.http.put<Transaction>(`${this.apiUrl}/${id}`, data)
+    }
+
+    getTransaction(id: string): Observable<Transaction>{
+        return this.http.get<Transaction>(`${this.apiUrl}/${id}`);
+    }
+
     listTransactions(params?: TransactionFilterParams): Observable<TransactionListResponse>{
         let httpParams = new HttpParams();
         if (params) {

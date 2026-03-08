@@ -9,7 +9,7 @@ import (
 )
 
 type TransactionRepository interface {
-	Create(transaction *entities.Transaction) error
+	Save(transaction *entities.Transaction) error
 	FindByUserID(userID uuid.UUID, filters TransactionFilters) ([]entities.Transaction, int64, error)
 	FindByID(id uuid.UUID) (*entities.Transaction, error)
 	Delete(id uuid.UUID) error
@@ -24,8 +24,8 @@ func NewTransactionRepository(db *gorm.DB) TransactionRepository {
 	return &transactionRepository{db: db}
 }
 
-func (h *transactionRepository) Create(transaction *entities.Transaction) error {
-	return h.db.Create(transaction).Error
+func (h *transactionRepository) Save(transaction *entities.Transaction) error {
+	return h.db.Save(transaction).Error
 }
 
 func (h *transactionRepository) FindByUserID(userID uuid.UUID, filters TransactionFilters) ([]entities.Transaction, int64, error) {

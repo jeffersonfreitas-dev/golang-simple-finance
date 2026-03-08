@@ -28,6 +28,7 @@ type CreateTransactionRequest struct {
 	DueDate     string  `json:"dueDate" validate:"required"`
 	Category    string  `json:"category"`
 	Notes       string  `json:"notes"`
+	PaidAt      string  `json:"paidAt"`
 }
 
 type TransactionListResponse struct {

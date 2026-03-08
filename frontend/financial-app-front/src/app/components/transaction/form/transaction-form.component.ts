@@ -58,24 +58,24 @@ export class TransactionFormComponent implements OnInit {
   private loadTransaction(): void {
     if (!this.transactionId) return;
 
-    // this.transactionService.getTransaction(this.transactionId).subscribe({
-    //   next: (transaction) => {
-    //     this.transactionForm.patchValue({
-    //       type: transaction.type,
-    //       description: transaction.description,
-    //       amount: transaction.amount,
-    //       dueDate: this.formatDate(transaction.dueDate),
-    //       category: transaction.category,
-    //       status: transaction.status,
-    //       notes: transaction.notes,
-    //       paidAt: transaction.paidAt ? this.formatDate(transaction.paidAt) : ''
-    //     });
-    //   },
-    //   error: (error) => {
-    //     console.error('Error loading transaction:', error);
-    //     this.errorMessage = 'Erro ao carregar transação';
-    //   }
-    // });
+    this.transactionService.getTransaction(this.transactionId).subscribe({
+      next: (transaction) => {
+        this.transactionForm.patchValue({
+          type: transaction.type,
+          description: transaction.description,
+          amount: transaction.amount,
+          dueDate: this.formatDate(transaction.dueDate),
+          category: transaction.category,
+          status: transaction.status,
+          notes: transaction.notes,
+          paidAt: transaction.paidAt ? this.formatDate(transaction.paidAt) : ''
+        });
+      },
+      error: (error) => {
+        console.error('Error loading transaction:', error);
+        this.errorMessage = 'Erro ao carregar transação';
+      }
+    });
   }
 
   private formatDate(date: Date | string): string {
@@ -115,22 +115,21 @@ export class TransactionFormComponent implements OnInit {
     const formData = this.transactionForm.value;
 
     if (this.isEditing && this.transactionId) {
-      // Update existing transaction
-    //   this.transactionService.updateTransaction(this.transactionId, formData).subscribe({
-    //     next: () => {
-    //       this.isSaving = false;
-    //       this.successMessage = 'Transação atualizada com sucesso!';
+      this.transactionService.updateTransaction(this.transactionId, formData).subscribe({
+        next: () => {
+          this.isSaving = false;
+          this.successMessage = 'Transação atualizada com sucesso!';
           
-    //       setTimeout(() => {
-    //         this.router.navigate(['/transactions']);
-    //       }, 1500);
-    //     },
-    //     error: (error) => {
-    //       this.isSaving = false;
-    //       console.error('Error updating transaction:', error);
-    //       this.errorMessage = error.error?.message || 'Erro ao atualizar transação';
-    //     }
-    //   });
+          setTimeout(() => {
+            this.router.navigate(['/transactions']);
+          }, 1000);
+        },
+        error: (error) => {
+          this.isSaving = false;
+          console.error('Error updating transaction:', error);
+          this.errorMessage = error.error?.message || 'Erro ao atualizar transação';
+        }
+      });
     } else {
       this.transactionService.createTransaction(formData).subscribe({
         next: () => {

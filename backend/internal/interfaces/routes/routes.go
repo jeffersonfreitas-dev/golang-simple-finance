@@ -31,8 +31,8 @@ func SetupRoutes(router *gin.Engine, db *gorm.DB, jwtService auth.JWTService) {
 		// Transactions
 		protected.POST("/transactions", transactionHandler.CreateTransaction)
 		protected.GET("/transactions", transactionHandler.ListTransactions)
-		// protected.GET("/transactions/:id", transactionHandler.GetTransaction)
-		// protected.PUT("/transactions/:id", transactionHandler.UpdateTransaction)
+		protected.GET("/transactions/:id", transactionHandler.GetTransaction)
+		protected.PUT("/transactions/:id", transactionHandler.CreateTransaction)
 		protected.DELETE("/transactions/:id", transactionHandler.DeleteTransaction)
 
 		// Reports

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -11,6 +10,7 @@ import (
 	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/domain/entities"
 	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/domain/repositories"
 	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/interfaces/dto"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/utils"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
@@ -27,6 +27,7 @@ func NewTransactionHandler(db *gorm.DB) *TransactionHandler {
 
 func (h *TransactionHandler) CreateTransaction(c *gin.Context) {
 	userID, _ := c.Get("user_id")
+	id, _ := uuid.Parse(c.Param("id"))
 
 	var req dto.CreateTransactionRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -39,14 +40,14 @@ func (h *TransactionHandler) CreateTransaction(c *gin.Context) {
 		return
 	}
 
-	fmt.Print(req.DueDate)
-	loc, err := time.LoadLocation("America/Fortaleza")
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	dueDate, err := time.ParseInLocation("2006-01-02", req.DueDate, loc)
-	if err != nil {
-		fmt.Println(err.Error())
+	dueDate, _ := utils.ConvertStringDate(req.DueDate)
+	var paidAt *time.Time
+	status := entities.TransactionStatus("pending")
+
+	if req.PaidAt != "" {
+		t, _ := utils.ConvertStringDate(req.PaidAt)
+		paidAt = &t
+		status = entities.TransactionStatus("paid")
 	}
 
 	transaction := &entities.Transaction{
@@ -57,9 +58,15 @@ func (h *TransactionHandler) CreateTransaction(c *gin.Context) {
 		DueDate:     dueDate,
 		Category:    req.Category,
 		Notes:       req.Notes,
+		PaidAt:      paidAt,
+		Status:      status,
 	}
 
-	if err := h.transactionRepo.Create(transaction); err != nil {
+	if id != uuid.Nil {
+		transaction.ID = id
+	}
+
+	if err := h.transactionRepo.Save(transaction); err != nil {
 		logrus.WithError(err).Error("Failed to create transaction")
 		c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: "Failed to create transaction"})
 		return
@@ -71,8 +78,6 @@ func (h *TransactionHandler) CreateTransaction(c *gin.Context) {
 
 func (h *TransactionHandler) ListTransactions(c *gin.Context) {
 	userID, _ := c.Get("user_id")
-
-	fmt.Print(c)
 
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
@@ -187,6 +192,28 @@ func (h *TransactionHandler) GetSummary(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, summary)
+}
+
+func (h *TransactionHandler) GetTransaction(c *gin.Context) {
+	id, _ := uuid.Parse(c.Param("id"))
+
+	if id == uuid.Nil {
+		c.JSON(http.StatusBadRequest, dto.ErrorResponse{Error: "invalid id param"})
+		return
+	}
+
+	transaction, err := h.transactionRepo.FindByID(id)
+	if transaction == nil {
+		c.JSON(http.StatusNotFound, dto.ErrorResponse{Error: "transaction not found"})
+		return
+	}
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, dto.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, transaction)
 }
 
 func toTransactionResponse(t *entities.Transaction) dto.TransactionResponse {
