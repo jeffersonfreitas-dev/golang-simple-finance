@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/domain/entities"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/internal/domain/entities"
 	"gorm.io/gorm"
 )
 

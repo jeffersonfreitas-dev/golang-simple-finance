@@ -9,10 +9,10 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/infrastructure/database"
-	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/infrastructure/auth"
-	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/infrastructure/middleware"
-	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/interfaces/routes"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/infrastructure/database"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/internal/infrastructure/auth"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/internal/infrastructure/middleware"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/internal/interfaces/routes"
 	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 )

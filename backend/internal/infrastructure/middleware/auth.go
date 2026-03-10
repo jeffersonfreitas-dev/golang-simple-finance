@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/infrastructure/auth"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/internal/infrastructure/auth"
 	"github.com/sirupsen/logrus"
 )
 

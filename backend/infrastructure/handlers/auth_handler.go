@@ -5,10 +5,10 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/domain/entities"
-	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/domain/repositories"
-	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/infrastructure/auth"
-	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/interfaces/dto"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/internal/domain/entities"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/internal/domain/repositories"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/internal/infrastructure/auth"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/internal/interfaces/dto"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )

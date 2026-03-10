@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/domain/entities"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/internal/domain/entities"
 	"github.com/sirupsen/logrus"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

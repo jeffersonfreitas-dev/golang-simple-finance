@@ -7,10 +7,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/domain/entities"
-	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/domain/repositories"
-	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/interfaces/dto"
-	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/utils"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/internal/domain/entities"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/internal/domain/repositories"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/internal/interfaces/dto"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/internal/utils"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )

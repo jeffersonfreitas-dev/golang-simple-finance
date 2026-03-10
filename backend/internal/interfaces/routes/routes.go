@@ -2,9 +2,9 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/infrastructure/handlers"
-	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/infrastructure/auth"
-	"github.com/jeffersonfreitas-dev/golang-simple-finance/backend/internal/infrastructure/middleware"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/infrastructure/handlers"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/internal/infrastructure/auth"
+	"github.com/jeffersonfreitas-dev/golang-simple-finance/internal/infrastructure/middleware"
 	"gorm.io/gorm"
 )
 
