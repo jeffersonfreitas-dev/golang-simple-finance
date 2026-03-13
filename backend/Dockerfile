@@ -10,11 +10,11 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o main ./cmd/api
 
 FROM alpine:latest
-RUN apk --no-cache add ca-certificates
+RUN apk --no-cache add ca-certificates tzdata
 WORKDIR /root/
 
 COPY --from=builder /app/main .
-COPY --from=builder /app/cmd/api/.env .env
+COPY --from=builder /app/cmd/api/.env .
 
 EXPOSE 8080
 

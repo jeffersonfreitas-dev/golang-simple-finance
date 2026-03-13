@@ -1,0 +1,75 @@
+# # Arquivos de ambiente (NÃO COPIAR!)
+# .env
+# .env.local
+# .env.development
+# .env.production
+# .env.test
+
+# # Diretórios de dependências
+# vendor/
+# node_modules/
+
+# # Arquivos de build e cache
+# *.exe
+# *.exe~
+# *.dll
+# *.so
+# *.dylib
+# *.test
+# *.out
+# *.log
+# *.pid
+# *.seed
+# *.pid.lock
+
+# # Diretórios do Go
+# /dist/
+# /build/
+# /tmp/
+# /cmd/api/.env
+
+# # Arquivos do Git
+# .git/
+# .gitignore
+# .gitattributes
+
+# # Arquivos do Docker
+# Dockerfile
+# .dockerignore
+# docker-compose*.yml
+# docker-compose*.yaml
+
+# # IDE e editores
+# .idea/
+# .vscode/
+# *.swp
+# *.swo
+# *~
+# .DS_Store
+
+# # Arquivos de log e temporários
+# logs/
+# *.log
+# tmp/
+# temp/
+
+# # Arquivos de cobertura de teste
+# coverage.out
+# coverage.html
+# *.coverprofile
+
+# # Binários locais (se você compilar localmente)
+# main
+# api
+# cmd/api/main
+
+# # Certificados (se houver)
+# *.pem
+# *.key
+# *.crt
+
+# # Arquivos de documentação (opcional)
+# README.md
+# LICENSE
+# *.txt
+# docs/

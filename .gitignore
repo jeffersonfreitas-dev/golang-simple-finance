@@ -31,6 +31,9 @@ go.work.sum
 # .idea/
 # .vscode/
 
+backend/.env
 
-frontend/financial-app-front/.vscode
-frontend/financial-app-front/nodes_modules
+frontend/dist
+frontend/.angular
+frontend/.vscode
+frontend/nodes_modules

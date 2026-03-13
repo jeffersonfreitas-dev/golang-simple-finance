@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
 # Copy source code
 COPY . .
@@ -19,7 +19,7 @@ RUN npm run build -- --configuration production
 FROM nginx:alpine
 
 # Copy built app to nginx
-COPY --from=build /app/dist/financial-app-frontend /usr/share/nginx/html
+COPY --from=build /app/dist/financial-app-front/browser /usr/share/nginx/html
 
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
