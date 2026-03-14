@@ -9,12 +9,16 @@
 
 </div>
 
+🌎 **Languages**
+- 🇺🇸 [English](README.en.md)
+- 🇧🇷 Português
+
 
 # 📋 Sobre o Projeto
 
-**Financial App** é uma aplicação completa de **gestão financeira pessoal e empresarial**, construída com uma arquitetura moderna baseada em **Go + Angular + PostgreSQL + Docker**.
+**Financial App** é uma aplicação simples de **gestão financeira pessoal**, construída com uma arquitetura moderna baseada em **Go + Angular + PostgreSQL + Docker**. Criei este projeto para praticar meus estudos com a linguagem Golang.
 
-O sistema oferece controle de **contas a pagar e receber**, **dashboard interativo**, **gráficos financeiros**, **relatórios detalhados** e **API REST documentada com Swagger**.
+O sistema oferece controle de **contas a pagar e receber**, **dashboard interativo**, **gráficos financeiros** e **relatórios detalhados**.
 
 ## Este projeto foi desenvolvido com foco em:
 
