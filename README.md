@@ -34,7 +34,7 @@ O sistema oferece controle de **contas a pagar e receber**, **dashboard interati
 
 ## Vídeo do Projeto
 
-[![YouTube](https://img.shields.io/badge/Assistir%20no%20YouTube-red?style=for-the-badge&logo=youtube)](https://youtube.com)
+[![YouTube](https://img.shields.io/badge/Assistir%20no%20YouTube-red?style=for-the-badge&logo=youtube)](https://youtu.be/poOCmzhHV4c)
 
 Clique no botão acima para assistir à **demonstração completa do projeto**.
 
@@ -213,7 +213,7 @@ Git
 
 ## 1️⃣ Clone o repositório
 ```bash 
-git clone https://github.com/seu-usuario/financial-app.git
+git clone https://github.com/jeffersonfreitas-dev/golang-simple-finance.git
 cd financial-app
 ```
 
